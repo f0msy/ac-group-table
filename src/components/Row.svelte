@@ -3,6 +3,7 @@
     import Cell from './Cell.svelte';
 
     export let rowData;
+    export let showRowNum = true;
 
     let focused = false;
 
@@ -17,7 +18,11 @@
 </script>
 
 <div class="ac-row" class:ac-row-focused={focused} on:click="{() => selectedRow.set(rowData?.id)}">
-    <div class="ac-rownum-cell">{rowData.rowId}</div>
+    <div class="ac-rownum-cell">
+        {#if showRowNum}
+            {rowData.rowId}
+        {/if} 
+    </div>   
     {#each rowData.fixedCells as cell}
         <Cell cellData={cell} rowId={rowData.id} cellStyles={'position: sticky; left:'+ cell.left +'px;'}/>
     {/each}

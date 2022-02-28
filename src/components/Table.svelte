@@ -3,8 +3,9 @@
    import { tableData } from '../stores/data.store';
    import CheckButton from "./CheckButton.svelte";
    import Header from './Header.svelte';
-   import Row from './Row.svelte';
    import SaveButton from "./SaveButton.svelte";
+   import Row from './Row.svelte';
+   import Group from './Group.svelte';
 
    let data = getTableData();
    tableData.subscribe(d => {
@@ -56,8 +57,8 @@
             </div>  
         {/if}
         <div class="ac-table-row">
-            {#each table.rows as row}
-                <Row rowData={row}/>
+            {#each table.groups as group}
+                <Group groupData={group}/>
             {/each}
         </div>
 

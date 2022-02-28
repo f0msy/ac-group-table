@@ -1,8 +1,9 @@
-import { tableRows } from '../stores/rows.store.js';
+import { tableGroups } from '../stores/rows.store.js';
 import { tableData } from '../stores/data.store.js';
 import { get } from 'svelte/store';
 import ProgressBar from '@badrap/bar-of-progress';
 const progress = new ProgressBar();
+let fixedColumnsCount;
 
 export function setProgressBar(value) {
   if (value === 'start') {
@@ -17,27 +18,111 @@ export function setProgressBar(value) {
 }
 
 function parseDataFromServer(result) {
-  const fixedColumnsCount = result.fixedColumnsCount;
+  fixedColumnsCount = result.fixedColumnsCount;
 
-  result.rows.map((r) => {
-    let orderedCells = [];
+  result.groups.map((g) => {
+    let orderedGroupCells = [];
     result.headers.forEach((h) => {
-      const cell = r.cells.find((c) => c.columnId === h.id);
-      orderedCells.push(cell);
+      const cell = g.cells.find((c) => c.columnId == h.id);
+      orderedGroupCells.push(cell);
     });
-    r.cells = orderedCells;
-    return r;
+    g.cells = orderedGroupCells;
+
+    g.rows.map((r) => {
+      let orderedRowCells = [];
+      result.headers.forEach((h) => {
+        const cell = r.cells.find((c) => c.columnId === h.id);
+        orderedRowCells.push(cell);
+      });
+      r.cells = orderedRowCells;
+      return r;
+    });
+    return g;
   });
 
-  result.rows.map((r) => {
-    r.fixedCells = [];
-    r.cells.map((c, i) => {
+  result.groups.map((g) => {
+    g.fixedCells = [];
+    g.cells.map((c, i) => {
       if (i < fixedColumnsCount) {
-        r.fixedCells.push(c);
+        g.fixedCells.push(c);
       }
     });
-    r.cells = r.cells.slice(fixedColumnsCount);
-    return r;
+    g.cells = g.cells.slice(fixedColumnsCount);
+
+    g.rows.map((r) => {
+      r.fixedCells = [];
+      r.cells.map((c, i) => {
+        if (i < fixedColumnsCount) {
+          r.fixedCells.push(c);
+        }
+      });
+      r.cells = r.cells.slice(fixedColumnsCount);
+      return r;
+    });
+    return g;
+  });
+
+  result.groups.map((g) => {
+    g.cells.map((c) => {
+      c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+      return c;
+    });
+
+    g.fixedCells.map((c) => {
+      c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+      return c;
+    });
+
+    return g;
+  })
+
+  result.groups.map((g) => {
+    g.fixedCells.map((c, i) => {
+      if (i == 0) {
+        c.left = 40;
+        return c;
+      }
+      c.left = g.fixedCells.reduce((acc, curr, index) => {
+        if (index < i) {
+          return acc + curr.width;
+        }
+        return acc;
+      }, 40);
+      return c;
+    });
+
+    g.rows.map((r) => {
+      r.cells.map((c) => {
+        c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+        return c;
+      });
+  
+      r.fixedCells.map((c) => {
+        c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+        return c;
+      });
+  
+      return r;
+    });
+  
+    g.rows.map((r) => {
+      r.fixedCells.map((c, i) => {
+        if (i == 0) {
+          c.left = 40;
+          return c;
+        }
+        c.left = r.fixedCells.reduce((acc, curr, index) => {
+          if (index < i) {
+            return acc + curr.width;
+          }
+          return acc;
+        }, 40);
+        return c;
+      });
+      return r;
+    });
+
+    return g;
   });
 
   if(result?.totals) {
@@ -90,37 +175,6 @@ function parseDataFromServer(result) {
     return headersWidth ? headersWidth : fixedHeadersWidth;
   }
 
-  result.rows.map((r) => {
-    r.cells.map((c) => {
-      c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
-      return c;
-    });
-
-    r.fixedCells.map((c) => {
-      c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
-      return c;
-    });
-
-    return r;
-  });
-
-  result.rows.map((r) => {
-    r.fixedCells.map((c, i) => {
-      if (i == 0) {
-        c.left = 40;
-        return c;
-      }
-      c.left = r.fixedCells.reduce((acc, curr, index) => {
-        if (index < i) {
-          return acc + curr.width;
-        }
-        return acc;
-      }, 40);
-      return c;
-    });
-    return r;
-  });
-
   if(result?.totals) { 
     result.totals.map((t) => {
       t.cells.map((c) => {
@@ -154,7 +208,7 @@ function parseDataFromServer(result) {
     });
   }
 
-  tableRows.set(result.rows);
+  tableGroups.set(result.groups)
   tableData.set(result);
 
   return result;
@@ -162,18 +216,180 @@ function parseDataFromServer(result) {
 
 function prepareBody() {
   const data = get(tableData);
-  const body = get(tableRows);
+  const body = get(tableGroups);
 
   body.map((b) => {
-    const fixedCells = data.rows.find((r) => r.id === b.id)?.fixedCells;
-    if (fixedCells) {
-      b.cells = [...fixedCells, ...b.cells];
+    const fixedGroupCells = data.groups.find((g) => g.groupId === b.groupId)?.fixedCells;
+    if (fixedGroupCells) {
+      b.cells = [...fixedGroupCells, ...b.cells];
       delete b.fixedCells;
     }
+
+    const groupRows = data.groups.find((g) => g.groupId === b.groupId).rows
+    groupRows.map(r => {
+      const fixedCells = r?.fixedCells
+      if (fixedCells) {
+        r.cells = [...fixedCells, ...r.cells];
+        delete r.fixedCells;
+      }
+      return r;
+    });
+    b.rows = groupRows;
+    
     return b;
   });
 
   return body;
+}
+
+function prepareRows(result, rows) {
+  
+
+  return rows;
+}
+
+function setGroupRows(groupId, rows) {
+  tableData.update(result => {
+    function findCellWidth(columnId) {
+      const headersWidth = result?.headers?.find((e) => e.id === columnId)?.width;
+      const fixedHeadersWidth = result?.fixedHeaders?.find(
+        (e) => e.id === columnId
+      )?.width;
+  
+      return headersWidth ? headersWidth : fixedHeadersWidth;
+    }
+    rows.map((r) => {
+      let orderedRowCells = [];
+      result?.fixedHeaders?.forEach((h) => {
+        const cell = r.cells.find((c) => c.columnId === h.id);
+        orderedRowCells.push(cell);
+      });
+  
+      result.headers.forEach((h) => {
+        const cell = r.cells.find((c) => c.columnId === h.id);
+        orderedRowCells.push(cell);
+      });
+      r.cells = orderedRowCells;
+      return r;
+    });
+  
+    rows.map((r) => {
+      r.fixedCells = [];
+      r.cells.map((c, i) => {
+        if (i < fixedColumnsCount) {
+          r.fixedCells.push(c);
+        }
+      });
+      r.cells = r.cells.slice(fixedColumnsCount);
+      return r;
+    });
+  
+    rows.map((r) => {
+      r.cells.map((c) => {
+        c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+        return c;
+      });
+  
+      r.fixedCells.map((c) => {
+        c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+        return c;
+      });
+  
+      return r;
+    });
+  
+    rows.map((r) => {
+      r.fixedCells.map((c, i) => {
+        if (i == 0) {
+          c.left = 40;
+          return c;
+        }
+        c.left = r.fixedCells.reduce((acc, curr, index) => {
+          if (index < i) {
+            return acc + curr.width;
+          }
+          return acc;
+        }, 40);
+        return c;
+      });
+      return r;
+    });
+    result.groups.find(g => g.groupId == groupId).rows = rows;
+    console.log(result);
+    return result;
+  })
+}
+
+function addRowToGroup(groupId, rows) {
+  tableData.update(result => {
+    function findCellWidth(columnId) {
+      const headersWidth = result?.headers?.find((e) => e.id === columnId)?.width;
+      const fixedHeadersWidth = result?.fixedHeaders?.find(
+        (e) => e.id === columnId
+      )?.width;
+  
+      return headersWidth ? headersWidth : fixedHeadersWidth;
+    }
+    rows.map((r) => {
+      let orderedRowCells = [];
+      result?.fixedHeaders?.forEach((h) => {
+        const cell = r.cells.find((c) => c.columnId === h.id);
+        orderedRowCells.push(cell);
+      });
+  
+      result.headers.forEach((h) => {
+        const cell = r.cells.find((c) => c.columnId === h.id);
+        orderedRowCells.push(cell);
+      });
+      r.cells = orderedRowCells;
+      return r;
+    });
+  
+    rows.map((r) => {
+      r.fixedCells = [];
+      r.cells.map((c, i) => {
+        if (i < fixedColumnsCount) {
+          r.fixedCells.push(c);
+        }
+      });
+      r.cells = r.cells.slice(fixedColumnsCount);
+      return r;
+    });
+  
+    rows.map((r) => {
+      r.cells.map((c) => {
+        c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+        return c;
+      });
+  
+      r.fixedCells.map((c) => {
+        c.width = parseInt(findCellWidth(c.columnId).replace('px', ''));
+        return c;
+      });
+  
+      return r;
+    });
+  
+    rows.map((r) => {
+      r.fixedCells.map((c, i) => {
+        if (i == 0) {
+          c.left = 40;
+          return c;
+        }
+        c.left = r.fixedCells.reduce((acc, curr, index) => {
+          if (index < i) {
+            return acc + curr.width;
+          }
+          return acc;
+        }, 40);
+        return c;
+      });
+      return r;
+    });
+    result.groups.find(g => g.groupId == groupId).rows.push(rows[0]);
+    console.log(result);
+    return result;
+  })
 }
 
 export async function getTableData() {
@@ -217,5 +433,37 @@ export async function setTableData() {
   });
   const result = await response.json();
   alert(result?.response);
+  setProgressBar('finish');
+}
+
+export async function getGroupRows(body) {
+  setProgressBar('start');
+  const url =
+    window.setTableUrl ?? '/app/v1.2/api/publications/action/get-group-rows';
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: '{data:' + JSON.stringify(body) + '}',
+  });
+  const result = await response.json();
+  setGroupRows(body.groupId, result);
+  setProgressBar('finish');
+}
+
+export async function addGroupRow(body) {
+  setProgressBar('start');
+  const url =
+    window.setTableUrl ?? '/app/v1.2/api/publications/action/add-group-row';
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: '{data:' + JSON.stringify(body) + '}',
+  });
+  const result = await response.json();
+  addRowToGroup(body.groupId, result);
   setProgressBar('finish');
 }

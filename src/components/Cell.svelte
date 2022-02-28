@@ -1,9 +1,10 @@
 <script>
-    import { updateTableRows } from '../helpers/updateTableRows'
+    import { updateTableGroups } from '../helpers/updateTableGroups'
     import { checkTableData } from '../services/data.service'
 
     export let cellData;
     export let rowId;
+    export let groupId;
     export let cellStyles = '';
     let isEditing = false;
 
@@ -53,7 +54,7 @@
         disabled={cellData?.canEdit === 0 || !cellData?.canEdit}
         value={parseValue(cellData.value)}
         on:input="{handleInput}"
-        on:keyup="{e => updateTableRows(e.target.value, cellData.columnId, rowId)}"        
+        on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
         >
     {/if}
 
@@ -66,7 +67,7 @@
         value={parseValue(cellData.value)}
         on:input="{handleInput}"
         on:blur="{() => isEditing = false}"
-        on:keyup="{e => updateTableRows(e.target.value, cellData.columnId, rowId)}"        
+        on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
         >
     {/if}
 
