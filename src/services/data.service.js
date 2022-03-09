@@ -1,5 +1,5 @@
 import { tableGroups } from '../stores/rows.store.js';
-import { tableData } from '../stores/data.store.js';
+import { dataLoading, tableData } from '../stores/data.store.js';
 import { get } from 'svelte/store';
 import ProgressBar from '@badrap/bar-of-progress';
 const progress = new ProgressBar();
@@ -394,6 +394,7 @@ function addRowToGroup(groupId, rows) {
 
 export async function getTableData() {
   setProgressBar('start');
+  dataLoading.set(true);
   const url =
     window.getTableUrl ?? '/app/v1.2/api/publications/action/get-table-data';
   const resp = await fetch(url);
@@ -404,6 +405,7 @@ export async function getTableData() {
 
 export async function checkTableData() {
   setProgressBar('start');
+  dataLoading.set(true);
   const body = prepareBody();
   const url =
     window.checkTableUrl ??
@@ -421,6 +423,7 @@ export async function checkTableData() {
 
 export async function setTableData() {
   setProgressBar('start');
+  dataLoading.set(true);
   const body = prepareBody();
   const url =
     window.setTableUrl ?? '/app/v1.2/api/publications/action/set-table-data';
@@ -433,13 +436,15 @@ export async function setTableData() {
   });
   const result = await response.json();
   alert(result?.response);
+  dataLoading.set(false);
   setProgressBar('finish');
 }
 
 export async function getGroupRows(body) {
   setProgressBar('start');
+  dataLoading.set(true);
   const url =
-    window.setTableUrl ?? '/app/v1.2/api/publications/action/get-group-rows';
+    window.getGroupRowsUrl ?? '/app/v1.2/api/publications/action/get-group-rows';
   let response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -449,13 +454,15 @@ export async function getGroupRows(body) {
   });
   const result = await response.json();
   setGroupRows(body.groupId, result);
+  dataLoading.set(false);
   setProgressBar('finish');
 }
 
 export async function addGroupRow(body) {
   setProgressBar('start');
+  dataLoading.set(true);
   const url =
-    window.setTableUrl ?? '/app/v1.2/api/publications/action/add-group-row';
+    window.addGroupRowUrl ?? '/app/v1.2/api/publications/action/add-group-row';
   let response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -465,5 +472,6 @@ export async function addGroupRow(body) {
   });
   const result = await response.json();
   addRowToGroup(body.groupId, result);
+  dataLoading.set(false);
   setProgressBar('finish');
 }

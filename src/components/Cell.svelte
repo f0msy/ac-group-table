@@ -6,7 +6,13 @@
     export let rowId;
     export let groupId;
     export let cellStyles = '';
+
     let isEditing = false;
+    let loaded;
+
+    dataLoading.subscribe(d => {
+        loaded = d;
+    })
 
     function handleInput(event) {
         if(cellData.type === 'checkbox') {
@@ -46,16 +52,24 @@
 </script>
 
 <div class="ac-cell {cellData.type === 'text' ? 'ac-cell-align-left' : ''}" style="width: {cellData.width}px; background-color: {cellData.background || '#fff'}; {cellStyles}">
-    {#if cellData.type !== 'number'}
+    {#if cellData.type !== 'number' && cellData.type !== 'select'}
         <input
         title="{cellData?.tooltip || cellData.value}" 
         style="background-color: {cellData.background || '#fff'};" 
         type="{cellData.type || 'text'}" 
-        disabled={cellData?.canEdit === 0 || !cellData?.canEdit || dataLoading}
+        disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded}
         value={parseValue(cellData.value)}
         on:input="{handleInput}"
         on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
         >
+    {/if}
+
+    {#if cellData.type === 'select'}
+        <select id="123" style="background-color: {cellData.background || '#fff'};" disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded} on:change="{e => {updateTableGroups(e.target.value, cellData.columnId, rowId, groupId);}}">
+            {#each cellData.options as option}
+                <option value="{option.value}" selected={cellData.value === option.value}>{option.text}</option>
+            {/each} 
+        </select>
     {/if}
 
     {#if isEditing && cellData.type === 'number'}
@@ -63,7 +77,7 @@
         title="{cellData?.tooltip || cellData.value}" 
         style="background-color: {cellData.background || '#fff'};" 
         type="number" 
-        disabled={cellData?.canEdit === 0 || !cellData?.canEdit}
+        disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded}
         value={parseValue(cellData.value)}
         on:input="{handleInput}"
         on:blur="{() => isEditing = false}"
@@ -76,7 +90,7 @@
         title="{cellData?.tooltip || cellData.value}" 
         style="background-color: {cellData.background || '#fff'};" 
         type="text" 
-        disabled={cellData?.canEdit === 0 || !cellData?.canEdit}
+        disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded}
         value={formatNumber(cellData.value)}
         on:focus="{() => isEditing = true}"
         >

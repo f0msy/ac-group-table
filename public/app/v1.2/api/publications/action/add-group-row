@@ -31,7 +31,7 @@
                         "text": "Четвертый"
                     }
                 ],
-                "canEdit": 0,
+                "canEdit": 1,
                 "type": "select",
                 "background": "#e5e5e5"
             }

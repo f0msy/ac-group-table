@@ -1,6 +1,6 @@
 <script>
    import { getTableData,setProgressBar } from '../services/data.service';
-   import { tableData } from '../stores/data.store';
+   import { tableData, dataLoading } from '../stores/data.store';
    import CheckButton from "./CheckButton.svelte";
    import Header from './Header.svelte';
    import SaveButton from "./SaveButton.svelte";
@@ -12,8 +12,13 @@
     if(d) {
         data = d;
         setProgressBar('finish');
+        dataLoading.set(false);
     }
    });
+
+   dataLoading.subscribe(d => {
+       console.log(d);
+   })
 </script>
 <div class="ac-table-container">
     <div class="ac-table">

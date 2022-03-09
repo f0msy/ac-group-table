@@ -9,6 +9,31 @@
             "canEdit": 0,
             "type": "text",
             "background": "#e5e5e5"
+            },
+            {
+                "columnId": "dropdown",
+                "value": "1111",
+                "options": [
+                    {
+                        "value": "1111", 
+                        "text": "Первый"
+                    },
+                    {
+                        "value": "2222", 
+                        "text": "Второй"
+                    },
+                    {
+                        "value": "3333", 
+                        "text": "Третий"
+                    },
+                    {
+                        "value": "4444", 
+                        "text": "Четвертый"
+                    }
+                ],
+                "canEdit": 1,
+                "type": "select",
+                "background": "#e5e5e5"
             }
         ]
     }
