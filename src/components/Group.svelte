@@ -2,6 +2,7 @@
     import { selectedRow } from '../stores/rows.store';
     import { getGroupRows, addGroupRow } from '../services/data.service';
     import { tableData } from '../stores/data.store';
+    import { dataLoading } from '../stores/data.store'
     import Cell from './Cell.svelte';  
     import Row from './Row.svelte';
 
@@ -42,13 +43,17 @@
 <div class="ac-row" class:ac-row-focused={focused} on:click="{() => selectedRow.set(groupData?.groupId)}">
     <div class="ac-rownum-cell" on:click="{() => setExpanded()}">
         {#if groupData.isExpanded}
+        <button class="ac-row-button" disabled="{dataLoading}">
             <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0001 10.9192L15.0405 13.9596L15.9597 13.0404L12.0001 9.08074L8.04048 13.0404L8.95972 13.9596L12.0001 10.9192Z" fill="currentColor"></path>
-            </svg>   
+            </svg> 
+        </button>
         {:else}
+        <button class="ac-row-button" disabled="{dataLoading}">
             <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M15.9595 10.9596L11.9999 14.9193L8.04028 10.9596L8.95952 10.0404L11.9999 13.0808L15.0403 10.0404L15.9595 10.9596Z" fill="currentColor"></path>
             </svg>
+        </button>         
         {/if}
     </div>
     {#each groupData.fixedCells as cell}
@@ -71,6 +76,12 @@
 
 
 <style>
+
+    .ac-row-button {
+        background: transparent;
+        border: transparent;
+    }
+
     .ac-row {
         display: flex;
         height: 50px;

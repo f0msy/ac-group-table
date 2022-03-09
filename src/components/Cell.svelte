@@ -1,6 +1,6 @@
 <script>
     import { updateTableGroups } from '../helpers/updateTableGroups'
-    import { checkTableData } from '../services/data.service'
+    import { dataLoading } from '../stores/data.store'
 
     export let cellData;
     export let rowId;
@@ -51,7 +51,7 @@
         title="{cellData?.tooltip || cellData.value}" 
         style="background-color: {cellData.background || '#fff'};" 
         type="{cellData.type || 'text'}" 
-        disabled={cellData?.canEdit === 0 || !cellData?.canEdit}
+        disabled={cellData?.canEdit === 0 || !cellData?.canEdit || dataLoading}
         value={parseValue(cellData.value)}
         on:input="{handleInput}"
         on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
