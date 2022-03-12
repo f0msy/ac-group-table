@@ -1,6 +1,6 @@
 <script>
     import { selectedRow } from '../stores/rows.store';
-    import { getGroupRows, addGroupRow } from '../services/data.service';
+    import { getGroupRows, addGroupRow, removeGroupRow } from '../services/data.service';
     import { tableData } from '../stores/data.store';
     import { dataLoading } from '../stores/data.store'
     import Cell from './Cell.svelte';  
@@ -44,6 +44,10 @@
          groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId});
     }
 
+    async function removeRow() {
+        groupRows = await removeGroupRow({groupId: groupData.groupId, taskId: groupData.taskId})
+    }
+
 
 </script>
 <div class="ac-row" class:ac-row-focused={focused} on:click="{() => selectedRow.set(groupData?.groupId)}">
@@ -73,9 +77,13 @@
 {#if groupData.isExpanded}
     {#await groupRows then rows}
         {#each groupData.rows as row}
-            <Row rowData={row} showRowNum={false}/>
+            <Row rowData={row}/>
         {/each}
-        <div class="ac-add-row-btn" on:click="{() => addRow()}">+</div>
+        <div class="ac-row-btns-container">
+            <div class="ac-row-btn" on:click="{() => addRow()}">+</div>
+            <div class="ac-row-btn" on:click="{() => removeRow()}">-</div>
+        </div>
+        
     {/await}
 {/if}
 
@@ -93,7 +101,12 @@
         height: 50px;
     }
 
-    .ac-add-row-btn {
+    .ac-row-btns-container {
+        width: 80px;
+        display: flex;
+    }
+
+    .ac-row-btn {
         width: 40px;
         height: 50px;
         background-color: #e5e5e5;   
@@ -103,6 +116,8 @@
         font-size: 25px;
         align-items: center; 
         cursor: pointer;
+        border-right: 1px solid #d7d7d7;
+        border-bottom: 1px solid #d7d7d7;
     }    
 
     .ac-row-focused {
@@ -116,8 +131,8 @@
         align-items: center;
         justify-content: center;
         border-right: 1px solid #d7d7d7;
-        box-sizing: border-box;
         border-bottom: 1px solid #d7d7d7;
+        box-sizing: border-box;
         width: 40px;
         background-color: #e5e5e5;       
         position: sticky;

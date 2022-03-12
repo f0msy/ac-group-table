@@ -7,13 +7,13 @@
 
     let focused = false;
 
-    selectedRow.subscribe(v => {
-        if(v == rowData?.id) {
-            focused = true;
-        } else {
-            focused = false;
-        }
-    });
+    // selectedRow.subscribe(v => {
+    //     if(v == rowData?.id) {
+    //         focused = true;
+    //     } else {
+    //         focused = false;
+    //     }
+    // });
 
 </script>
 

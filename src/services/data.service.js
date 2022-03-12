@@ -392,6 +392,8 @@ function addRowToGroup(groupId, rows) {
   })
 }
 
+
+
 export async function getTableData() {
   setProgressBar('start');
   dataLoading.set(true);
@@ -474,4 +476,22 @@ export async function addGroupRow(body) {
   addRowToGroup(body.groupId, result);
   dataLoading.set(false);
   setProgressBar('finish');
+}
+
+export async function removeGroupRow(body) {
+    setProgressBar('start');
+    dataLoading.set(true);
+    const url =
+      window.removeGroupRowUrl ?? '/app/v1.2/api/publications/action/remove-group-row';
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: '{data:' + JSON.stringify(body) + '}',
+    });
+    const result = await response.json();
+    setGroupRows(body.groupId, result);
+    dataLoading.set(false);
+    setProgressBar('finish');
 }
