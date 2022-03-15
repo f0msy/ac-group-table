@@ -2,6 +2,7 @@
     {
         "id": "07501084720290059613",
         "rowId": 2,
+        "manually": true,
         "cells": [
             {
             "columnId": "grbs",

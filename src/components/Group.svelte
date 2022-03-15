@@ -77,11 +77,11 @@
 {#if groupData.isExpanded}
     {#await groupRows then rows}
         {#each groupData.rows as row}
-            <Row rowData={row}/>
+            <Row rowData={row} groupId={groupData.groupId} taskId={groupData.taskId}/>
         {/each}
         <div class="ac-row-btns-container">
             <div class="ac-row-btn" on:click="{() => addRow()}">+</div>
-            <div class="ac-row-btn" on:click="{() => removeRow()}">-</div>
+            <!-- <div class="ac-row-btn" on:click="{() => removeRow()}">-</div> -->
         </div>
         
     {/await}

@@ -67,6 +67,8 @@
             {/each}
         </div>
 
+        {:catch error}
+	        <p style="color: red">{error.message}</p>
         {/await}
     </div>
 </div>

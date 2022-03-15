@@ -8,9 +8,9 @@
     dataLoading.subscribe(d => {
         loaded = d;
     })
-    // onMount(() => {
-    //     checkTableData();
-    // })
+    onMount(() => {
+        checkTableData();
+    })
 </script>
 
     <button on:click={checkTableData} disabled="{loaded}" class="ac-table-btn">

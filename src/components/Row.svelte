@@ -1,8 +1,11 @@
 <script>
     import { selectedRow } from '../stores/rows.store';
+    import { removeGroupRow, setTableData } from '../services/data.service';
     import Cell from './Cell.svelte';
 
     export let rowData;
+    export let groupId;
+    export let taskId;
     export let showRowNum = true;
 
     let focused = false;
@@ -15,13 +18,30 @@
     //     }
     // });
 
+    let showRemoveBtn = false;
+
+    // groupRows = await removeGroupRow({groupId: groupData.groupId, taskId: groupData.taskId})
+    async function removeRow() {
+        await setTableData().then(_ => {
+            removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
+        })
+    }
+
 </script>
 
-<div class="ac-row" class:ac-row-focused={focused} on:click="{() => selectedRow.set(rowData?.id)}">
+<div class="ac-row" 
+    class:ac-row-focused={focused} 
+    on:click="{() => selectedRow.set(rowData?.id)}" 
+    on:mouseenter="{() => showRemoveBtn = true}"
+    on:mouseleave="{() => showRemoveBtn = false}"
+    >
     <div class="ac-rownum-cell">
-        {#if showRowNum}
+        {#if (showRowNum && !showRemoveBtn) || (showRowNum && !rowData?.manually)}
             {rowData.rowId}
         {/if} 
+        {#if showRemoveBtn && groupId && taskId && rowData.manually}
+            <span style="cursor: pointer; font-size: 16px; font-weight: 600;" on:click="{() => removeRow()}">x</span>
+        {/if}
     </div>   
     {#each rowData.fixedCells as cell}
         <Cell cellData={cell} rowId={rowData.id} cellStyles={'position: sticky; left:'+ cell.left +'px;'}/>

@@ -1,0 +1,132 @@
+{
+  "fixedColumnsCount": "1",
+  "tableName": "Запросная форма: Минобрнауки России на 13.01.2022",
+  "titles": [
+    {
+      "id": 1,
+      "name": "",
+      "width": "400px",
+      "background": "#245796",
+      "textColor": "#ffffff"
+    }
+  ],
+    "headers": [
+      {
+        "id": "grbs",
+        "name": "ГРБС",
+        "width": "200px",
+        "background": "#245796",
+        "textColor": "#ffffff"
+      },
+      {
+        "id": "dropdown",
+        "name": "ВП",
+        "width": "200px",
+        "background": "#245796",
+        "textColor": "#ffffff"
+      }
+    ],
+    "totals": [
+      {
+        "rowId": 1,
+        "cells": [
+          {
+            "columnId": "grbs",
+            "value": "0",
+            "canEdit": 0,
+            "type": "text",
+            "background": "#e5e5e5"
+          },
+          {
+            "columnId": "dropdown",
+            "value": "0",
+            "canEdit": 0,
+            "type": "text",
+            "background": "#e5e5e5"
+          }
+        ]
+      }
+    ],
+    "groups": [
+      {
+        "groupId": 1,
+        "taskId": 123,
+        "isExpanded": false,
+        "cells": [
+          {
+            "columnId": "grbs",
+            "value": "075",
+            "canEdit": 0,
+            "type": "text",
+            "background": "#e5e5e5"
+          },
+          {
+            "columnId": "dropdown",
+            "value": "1111",
+            "options": [
+                {
+                    "value": "1111", 
+                    "text": "Первый"
+                },
+                {
+                    "value": "2222", 
+                    "text": "Второй"
+                },
+                {
+                    "value": "3333", 
+                    "text": "Третий"
+                },
+                {
+                    "value": "4444", 
+                    "text": "Четвертый"
+                }
+            ],
+            "canEdit": 1,
+            "type": "select",
+            "background": "#e5e5e5"
+        }
+        ],
+        "rows": []
+      },
+      {
+        "groupId": 2,
+        "taskId": 123,
+        "isExpanded": false,
+        "cells": [
+          {
+            "columnId": "grbs",
+            "value": "075",
+            "canEdit": 0,
+            "type": "text",
+            "background": "#e5e5e5"
+          },
+          {
+            "columnId": "dropdown",
+            "value": "1111",
+            "options": [
+                {
+                    "value": "1111", 
+                    "text": "Первый"
+                },
+                {
+                    "value": "2222", 
+                    "text": "Второй"
+                },
+                {
+                    "value": "3333", 
+                    "text": "Третий"
+                },
+                {
+                    "value": "4444", 
+                    "text": "Четвертый"
+                }
+            ],
+            "canEdit": 1,
+            "type": "select",
+            "background": "#e5e5e5"
+        }
+        ],
+        "rows": []
+      }
+    ]
+}
