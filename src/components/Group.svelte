@@ -66,7 +66,7 @@
         </button>         
         {/if}
     </div>
-    {#each groupData.fixedCells as cell}
+    {#each groupData?.fixedCells as cell}
         <Cell cellData={cell} rowId={groupData.id} cellStyles={'position: sticky; left:'+ cell.left +'px;'}/>
     {/each}
     {#each groupData.cells as cell}

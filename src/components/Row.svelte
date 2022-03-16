@@ -22,9 +22,10 @@
 
     // groupRows = await removeGroupRow({groupId: groupData.groupId, taskId: groupData.taskId})
     async function removeRow() {
-        await setTableData().then(_ => {
-            removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
-        })
+        await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
+        // await setTableData().then(_ => {
+        //     removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
+        // })
     }
 
 </script>

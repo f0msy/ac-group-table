@@ -49,6 +49,12 @@
         }
         return value;
     }
+
+
+    let selectTitle = '';
+    if(cellData.type === 'select') {
+        selectTitle = cellData.options.find(o => o.value === cellData.value)?.text
+    }    
 </script>
 
 <div class="ac-cell {cellData.type === 'text' ? 'ac-cell-align-left' : ''}" style="width: {cellData.width}px; background-color: {cellData.background || '#fff'}; {cellStyles}">
@@ -65,7 +71,7 @@
     {/if}
 
     {#if cellData.type === 'select'}
-        <select id="123" style="background-color: {cellData.background || '#fff'};" disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded} on:change="{e => {updateTableGroups(e.target.value, cellData.columnId, rowId, groupId);}}">
+        <select id="123" style="background-color: {cellData.background || '#fff'}; width: 90%;" title="{selectTitle}" disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded} on:change="{e => {updateTableGroups(e.target.value, cellData.columnId, rowId, groupId);}}">
             {#each cellData.options as option}
                 <option value="{option.value}" selected={cellData.value === option.value}>{option.text}</option>
             {/each} 

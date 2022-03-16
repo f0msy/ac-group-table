@@ -68,7 +68,8 @@
         </div>
 
         {:catch error}
-	        <p style="color: red">{error.message}</p>
+        <div class="ac-table-name">Ошибка загрузки данных</div>
+	    <p style="color: red">{error.message}</p>
         {/await}
     </div>
 </div>

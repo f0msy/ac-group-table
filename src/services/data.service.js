@@ -315,7 +315,6 @@ function setGroupRows(groupId, rows) {
       return r;
     });
     result.groups.find(g => g.groupId == groupId).rows = rows;
-    console.log(result);
     return result;
   })
 }
