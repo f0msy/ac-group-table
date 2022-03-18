@@ -15,10 +15,6 @@
         dataLoading.set(false);
     }
    });
-
-   dataLoading.subscribe(d => {
-       console.log(d);
-   })
 </script>
 <div class="ac-table-container">
     <div class="ac-table">

@@ -17,15 +17,14 @@
     //         focused = false;
     //     }
     // });
-
     let showRemoveBtn = false;
 
     // groupRows = await removeGroupRow({groupId: groupData.groupId, taskId: groupData.taskId})
     async function removeRow() {
-        await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
-        // await setTableData().then(_ => {
-        //     removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
-        // })
+        // await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
+        await setTableData().then(async () => {
+            await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
+        })
     }
 
 </script>

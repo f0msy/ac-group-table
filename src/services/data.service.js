@@ -217,12 +217,11 @@ function parseDataFromServer(result) {
 function prepareBody() {
   const data = get(tableData);
   const body = get(tableGroups);
-
   body.map((b) => {
     const fixedGroupCells = data.groups.find((g) => g.groupId === b.groupId)?.fixedCells;
     if (fixedGroupCells) {
       b.cells = [...fixedGroupCells, ...b.cells];
-      delete b.fixedCells;
+      b.fixedCells = [];
     }
 
     const groupRows = data.groups.find((g) => g.groupId === b.groupId).rows
@@ -230,7 +229,7 @@ function prepareBody() {
       const fixedCells = r?.fixedCells
       if (fixedCells) {
         r.cells = [...fixedCells, ...r.cells];
-        delete r.fixedCells;
+        r.fixedCells = [];
       }
       return r;
     });
@@ -240,12 +239,6 @@ function prepareBody() {
   });
 
   return body;
-}
-
-function prepareRows(result, rows) {
-  
-
-  return rows;
 }
 
 function setGroupRows(groupId, rows) {
@@ -386,7 +379,6 @@ function addRowToGroup(groupId, rows) {
       return r;
     });
     result.groups.find(g => g.groupId == groupId).rows.push(rows[0]);
-    console.log(result);
     return result;
   })
 }
