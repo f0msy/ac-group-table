@@ -44,7 +44,7 @@
         {/if}
     </div>   
     {#each rowData.fixedCells as cell}
-        <Cell cellData={cell} rowId={rowData.id} cellStyles={'position: sticky; left:'+ cell.left +'px;'}/>
+        <Cell cellData={cell} rowId={rowData.id} cellStyles={'position: sticky; left:'+ cell.left +'px; z-index: 2;'}/>
     {/each}
     {#each rowData.cells as cell}
         <Cell cellData={cell} rowId={rowData.id} />

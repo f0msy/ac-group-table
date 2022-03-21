@@ -41,7 +41,7 @@
     }
 
     async function addRow() {
-         groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId});
+        groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId, rowId: groupRows.length + 1});
     }
 
     async function removeRow() {
@@ -67,7 +67,7 @@
         {/if}
     </div>
     {#each groupData?.fixedCells as cell}
-        <Cell cellData={cell} rowId={groupData.id} cellStyles={'position: sticky; left:'+ cell.left +'px;'}/>
+        <Cell cellData={cell} rowId={groupData.id} cellStyles={'position: sticky; left:'+ cell.left +'px; z-index: 2;'}/>
     {/each}
     {#each groupData.cells as cell}
         <Cell cellData={cell} rowId={groupData.id} />
