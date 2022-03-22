@@ -1,6 +1,6 @@
 <script>
     import { selectedRow } from '../stores/rows.store';
-    import { getGroupRows, addGroupRow, removeGroupRow } from '../services/data.service';
+    import { getGroupRows, addGroupRow, removeGroupRow, checkTableData } from '../services/data.service';
     import { tableData } from '../stores/data.store';
     import { dataLoading } from '../stores/data.store'
     import Cell from './Cell.svelte';  
@@ -35,13 +35,15 @@
     async function setExpanded() {
         if(!groupData.rows.length) {
             groupRows = await getGroupRows({groupId: groupData.groupId, taskId: groupData.taskId});
+            checkTableData();
         }
         
         groupData.isExpanded = !groupData.isExpanded;
     }
 
     async function addRow() {
-        groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId, rowId: groupRows.length + 1});
+        groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId, rowId: groupData.rows.length + 1});
+        checkTableData();
     }
 
     async function removeRow() {
@@ -104,6 +106,8 @@
     .ac-row-btns-container {
         width: 80px;
         display: flex;
+        position: sticky;
+        left: 0;
     }
 
     .ac-row-btn {
@@ -118,6 +122,8 @@
         cursor: pointer;
         border-right: 1px solid #d7d7d7;
         border-bottom: 1px solid #d7d7d7;
+        position: sticky;
+        left: 0;
     }    
 
     .ac-row-focused {

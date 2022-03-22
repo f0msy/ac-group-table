@@ -1,6 +1,6 @@
 <script>
     import { selectedRow } from '../stores/rows.store';
-    import { removeGroupRow, setTableData } from '../services/data.service';
+    import { removeGroupRow, setTableData, checkTableData } from '../services/data.service';
     import Cell from './Cell.svelte';
 
     export let rowData;
@@ -23,7 +23,8 @@
     async function removeRow() {
         // await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
         await setTableData().then(async () => {
-            await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId})
+            await removeGroupRow({groupId: groupId, taskId: taskId, rowId: rowData.rowId}).then(() => {checkTableData()});
+
         })
     }
 
@@ -47,7 +48,7 @@
         <Cell cellData={cell} rowId={rowData.id} cellStyles={'position: sticky; left:'+ cell.left +'px; z-index: 2;'}/>
     {/each}
     {#each rowData.cells as cell}
-        <Cell cellData={cell} rowId={rowData.id} />
+        <Cell cellData={cell} rowId={rowData.id} groupId={groupId} />
     {/each}
 </div>
 

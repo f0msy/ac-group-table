@@ -122,7 +122,7 @@
         border: none;
         width: 90%;
         display: block;
-        border-bottom: 0.3rem solid transparent;
+        /* border-bottom: 0.3rem solid transparent; */
         transition: all 0.3s;
         text-align: end;
         cursor: pointer;
