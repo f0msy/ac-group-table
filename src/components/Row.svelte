@@ -41,7 +41,7 @@
             {rowData.rowId}
         {/if} 
         {#if showRemoveBtn && groupId && taskId && rowData.manually}
-            <span style="cursor: pointer; font-size: 16px; font-weight: 600;" on:click="{() => removeRow()}">x</span>
+            <span style="cursor: pointer; font-size: 16px; font-weight: 600;" on:click="{() => removeRow()}">X</span>
         {/if}
     </div>   
     {#each rowData.fixedCells as cell}
