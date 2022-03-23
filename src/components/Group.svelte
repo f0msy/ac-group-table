@@ -35,7 +35,7 @@
     async function setExpanded() {
         if(!groupData.rows.length) {
             groupRows = await getGroupRows({groupId: groupData.groupId, taskId: groupData.taskId});
-            // checkTableData();
+            checkTableData();
         }
         
         groupData.isExpanded = !groupData.isExpanded;
