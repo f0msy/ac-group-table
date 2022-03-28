@@ -58,13 +58,25 @@
 </script>
 
 <div class="ac-cell {cellData.type === 'text' ? 'ac-cell-align-left' : ''}" style="width: {cellData.width}px; background-color: {cellData.background || '#fff'}; {cellStyles}">
-    {#if cellData.type !== 'number' && cellData.type !== 'select'}
+    {#if cellData.type !== 'number' && cellData.type !== 'select' && cellData.type !== 'checkbox'}
         <input
         title="{cellData?.tooltip || cellData.value}" 
         style="background-color: {cellData.background || '#fff'};" 
         type="{cellData.type || 'text'}" 
         disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded}
         value={parseValue(cellData.value)}
+        on:input="{handleInput}"
+        on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
+        >
+    {/if}
+
+    {#if cellData.type == 'checkbox'}
+        <input
+        title="{cellData?.tooltip || cellData.value}" 
+        style="background-color: {cellData.background || '#fff'};" 
+        type="{cellData.type}" 
+        disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded}
+        checked={cellData.value}
         on:input="{handleInput}"
         on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
         >
@@ -85,6 +97,7 @@
         type="number" 
         disabled={cellData?.canEdit === 0 || !cellData?.canEdit || loaded}
         value={parseValue(cellData.value)}
+        autofocus
         on:input="{handleInput}"
         on:blur="{() => isEditing = false}"
         on:keyup="{e => updateTableGroups(e.target.value, cellData.columnId, rowId, groupId)}"        
