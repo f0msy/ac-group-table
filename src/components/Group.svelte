@@ -33,17 +33,18 @@
 
     let groupRows;
     async function setExpanded() {
-        if(!groupData.rows.length) {
-            groupRows = await getGroupRows({groupId: groupData.groupId, taskId: groupData.taskId});
-            checkTableData();
-        }
-        
         groupData.isExpanded = !groupData.isExpanded;
+        if(!groupData.rows.length) {
+            groupRows = await getGroupRows({groupId: groupData.groupId, taskId: groupData.taskId}).then( async () => {
+                await checkTableData();
+            });
+        }
     }
 
     async function addRow() {
-        groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId, rowId: groupData.rows.length + 1});
-        checkTableData();
+        groupRows = await addGroupRow({groupId: groupData.groupId, taskId: groupData.taskId, rowId: groupData.rows.length + 1}).then(async () => {
+            await checkTableData();
+        });
     }
 
     async function removeRow() {

@@ -74,6 +74,7 @@
         width: 40px;
         background-color: #e5e5e5;       
         position: sticky;
-        left: 0
+        left: 0;
+        z-index: 2;
     }
 </style>
