@@ -65,8 +65,7 @@
 
         {:catch error}
         <div class="ac-table-error-block">
-
-            <div class="ac-table-name">Ошибка загрузки данных</div>
+            <div class="ac-table-name" style="margin-top: 10px">Ошибка загрузки данных</div>
             <div class="ac-table-error-message"> 
                 <p style="color: red">{error.message}</p>
             </div>
@@ -86,7 +85,7 @@
         font-size: 20px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         margin: 0 10px;
     }
 
